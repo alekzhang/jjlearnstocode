@@ -11,7 +11,30 @@ namespace jjlearnstocode
     {
         static void Main(string[] args)
         {
+            double RSI = 0.0;
+            int x = 1;
             List<HistoricalStockData> AAPL = DownloadData("AAPL");
+            List<HistoricalStockData> updays = new List<HistoricalStockData>();
+            List<HistoricalStockData> downdays = new List<HistoricalStockData>();
+
+            while (x <= 300)
+            {
+           
+
+                for (int i = x; i < x + 30; i++)
+                {
+                    if (AAPL[i].Close >= AAPL[i - 1].Close)
+                        updays.Add(AAPL[i]);
+                    else
+                        downdays.Add(AAPL[i]);
+                }
+                RSI = 100.0 - (100.0 / (1.0 + (Averageup(updays) / Averageup(downdays))));
+                Console.WriteLine(RSI);
+                updays.Clear();
+                downdays.Clear();
+                x++;
+            }
+
             Console.ReadLine();
         }
 
@@ -49,5 +72,17 @@ namespace jjlearnstocode
                 return retval;
             }
         }
-    }
+           
+        
+        public static double Averageup(List<HistoricalStockData> updays)
+            {
+                double avgup = 0;
+                for(int i= 0; i < updays.Count; i++)
+                {
+                    avgup += updays[i].Close;
+                }
+                avgup = avgup / (double)updays.Count;
+                return avgup;
+            }   
+        }
 }
