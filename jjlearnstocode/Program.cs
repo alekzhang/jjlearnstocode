@@ -12,29 +12,48 @@ namespace jjlearnstocode
         static void Main(string[] args)
         {
             double RSI = 0.0;
+            double deltaa = 0.0;
             int x = 1;
             List<HistoricalStockData> AAPL = DownloadData("AAPL");
             List<HistoricalStockData> updays = new List<HistoricalStockData>();
             List<HistoricalStockData> downdays = new List<HistoricalStockData>();
+            List<double> deltaups = new List<double>();
+            List<double> deltadowns = new List<double>();
 
-            while (x <= 300)
+            while (x <= 2000)
             {
-           
-
                 for (int i = x; i < x + 30; i++)
                 {
                     if (AAPL[i].Close >= AAPL[i - 1].Close)
-                        updays.Add(AAPL[i]);
+                        {
+                            deltaa = AAPL[i].Close - AAPL[i - 1].Close;
+                            deltaups.Add(deltaa);
+                        }
                     else
-                        downdays.Add(AAPL[i]);
+                        {
+                            deltaa = AAPL[i - 1].Close - AAPL[i].Close;
+                            deltadowns.Add(deltaa);
+                        }
                 }
-                RSI = 100.0 - (100.0 / (1.0 + (Averageup(updays) / Averageup(downdays))));
+                RSI = 100.0 - (100.0 / (1.0 + (Averageup(deltaups) / Averageup(deltadowns))));
                 Console.WriteLine(RSI);
-                updays.Clear();
-                downdays.Clear();
+                deltaups.Clear();
+                deltadowns.Clear();
                 x++;
             }
-
+            for (int i = 1; i < x; i++)
+            {
+                if (AAPL[i].Close >= AAPL[i-1].Close)
+                {
+                    updays.Add(AAPL[i]);
+                }
+                else
+                {
+                    downdays.Add(AAPL[i]);
+                }
+            }
+            Console.WriteLine(updays.Count);
+            Console.WriteLine(downdays.Count);
             Console.ReadLine();
         }
 
@@ -74,12 +93,12 @@ namespace jjlearnstocode
         }
            
         
-        public static double Averageup(List<HistoricalStockData> updays)
+        public static double Averageup(List<double> updays)
             {
                 double avgup = 0;
                 for(int i= 0; i < updays.Count; i++)
                 {
-                    avgup += updays[i].Close;
+                    avgup += updays[i];
                 }
                 avgup = avgup / (double)updays.Count;
                 return avgup;

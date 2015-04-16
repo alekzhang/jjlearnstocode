@@ -17,3 +17,4 @@ namespace jjlearnstocode
         public double AdjClose { get; set; }
     }
 }
+    
