@@ -91,17 +91,59 @@ namespace jjlearnstocode
                 return retval;
             }
         }
-           
-        
+
         public static double Averageup(List<double> updays)
+        {
+            double avgup = 0;
+            for(int i= 0; i < updays.Count; i++)
             {
-                double avgup = 0;
-                for(int i= 0; i < updays.Count; i++)
-                {
-                    avgup += updays[i];
-                }
-                avgup = avgup / (double)updays.Count;
-                return avgup;
-            }   
+                avgup += updays[i];
+            }
+            avgup = avgup / (double)updays.Count;
+            return avgup;
         }
+
+        public static List<double> SimpleMovingAverage(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
+        {
+            List<double> smaData = new List<double>();
+            // jj code goes here
+            return smaData;
+        }
+
+        public static List<double> ExponentialMovingAverage(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays, double alpha)
+        {
+            List<double> emaData = new List<double>();
+            // jj code goes here
+            return emaData;
+        }
+
+        public static List<double> MACD(List<HistoricalStockData> data, int numberOfReturnedDays, int smallSampleDayCount, int largeSampleDayCount, int diffEMASampleDayCount)
+        {
+            List<double> macdData = new List<double>();
+            // jj code goes here
+            return macdData;
+        }
+
+        public static List<Tuple<double, double>> DMI(List<HistoricalStockData> data, int numberOfReturnedDays)
+        {
+            List<Tuple<double, double>> dmiData = new List<Tuple<double, double>>();
+            for(int i = 0; i < numberOfReturnedDays; i++)
+            {
+                double plusDI = 0.0;
+                double minusDI = 0.0;
+
+                // jj code goes here
+
+                dmiData.Add(new Tuple<double, double>(plusDI, minusDI));
+            }
+            return dmiData;
+        }
+
+        public static List<double> RSI(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
+        {
+            List<double> rsiData = new List<double>();
+            // jj code goes here
+            return rsiData;
+        }
+    }
 }
