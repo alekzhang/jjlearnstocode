@@ -5,3 +5,5 @@ C:\Users\Jon\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode
 C:\Users\Jon\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode\jjlearnstocode\obj\Debug\jjlearnstocode.csprojResolveAssemblyReference.cache
 C:\Users\Jon\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode\jjlearnstocode\obj\Debug\jjlearnstocode.exe
 C:\Users\Jon\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode\jjlearnstocode\obj\Debug\jjlearnstocode.pdb
+C:\Users\Alek\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode\obj\Debug\jjlearnstocode.exe
+C:\Users\Alek\Documents\Visual Studio 2013\Projects\jjlearnstocode\jjlearnstocode\obj\Debug\jjlearnstocode.pdb
