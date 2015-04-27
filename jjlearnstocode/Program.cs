@@ -12,7 +12,7 @@ namespace jjlearnstocode
         static void Main(string[] args)
         {
             List<HistoricalStockData> data = DownloadData("data");
-            RSI(10,10)
+            
 
             Console.WriteLine(updays.Count);
             Console.WriteLine(downdays.Count);
@@ -54,14 +54,14 @@ namespace jjlearnstocode
             }
         }
 
-        public static double Averageup(List<double> updays)
+        public static double Averagelist(List<double> anylist)
         {
             double avgup = 0;
-            for(int i= 0; i < updays.Count; i++)
+            for(int i= 0; i < anylist.Count; i++)
             {
-                avgup += updays[i];
+                avgup += anylist[i];
             }
-            avgup = avgup / (double)updays.Count;
+            avgup = avgup / (double)anylist.Count;
             return avgup;
         }
 
@@ -168,7 +168,7 @@ namespace jjlearnstocode
                         deltadowns.Add(deltaa);
                     }
                 }
-                RSI = 100.0 - (100.0 / (1.0 + (Averageup(deltaups) / Averageup(deltadowns))));
+                RSI = 100.0 - (100.0 / (1.0 + (Averagelist(deltaups) / Averagelist(deltadowns))));
                 Console.WriteLine(RSI);
                 deltaups.Clear();
                 deltadowns.Clear();
