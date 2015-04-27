@@ -68,22 +68,19 @@ namespace jjlearnstocode
         public static List<double> SimpleMovingAverage(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
         {
             List<double> smaData = new List<double>();
-            int x = 0;
             double sma = 0;
 
-           while (x < numberOfReturnedDays)
-           {
-               for (int i = x; i < x + numberOfSampleDays; i++)
-               {
-                   sma += data[i].Close;
-                  
-               }
+            for (int i = 1; i < numberOfReturnedDays; i++ )
+            {
+                for (int j = 1; j < numberOfSampleDays; j++)
+                {
+                    sma += data[j].Close;
 
-               sma = sma / numberOfSampleDays;
-               smaData.Add(sma);
-               sma = 0;
-               x++;
-           }
+                }
+                sma = sma / numberOfSampleDays;
+                smaData.Add(sma);
+                sma = 0;
+            }
 
             return smaData;
         }
@@ -91,30 +88,31 @@ namespace jjlearnstocode
         public static List<double> ExponentialMovingAverage(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
         {
             List<double> emaData = new List<double>();
-            int x = 0;
             double DayISma = 0;
             double DayIEma = 0;
             double ema = 0;
             double alpha = 2 / (numberOfSampleDays + 1);
-
+            
+            //find the Sma of the day before the last (least recent) day on the list
             for (int i = numberOfSampleDays + 1; i < numberOfSampleDays + numberOfSampleDays + 1; i++)
             {
                 DayISma += data[i].Close;
                 DayISma = DayISma / numberOfSampleDays;
             }
 
+            // find ema of last day using sma of day before
             DayIEma = (data[numberOfSampleDays].Close * alpha) + (DayISma * (1 - alpha));
-    
-            while (x < numberOfReturnedDays)
+           
+            // calc ema for each day using the ema of the day before
+            for (int i = 1; i < numberOfReturnedDays; i++)
+            {
+                for (int j = 1; j < numberOfSampleDays; j++)
                 {
-                    for (int i = x; i < x + numberOfSampleDays; i++)
-                    {
-                        ema = DayIEma + (alpha * (data[i].Close - DayIEma));
-                        emaData.Add(ema);
-                        DayIEma = ema;
-                    }
-                x++;
+                    ema = DayIEma + (alpha * (data[j].Close - DayIEma));
+                    emaData.Add(ema);
+                    DayIEma = ema;
                 }
+            }
 
             return emaData;
         }
@@ -122,8 +120,30 @@ namespace jjlearnstocode
         public static List<double> MACD(List<HistoricalStockData> data, int numberOfReturnedDays, int smallSampleDayCount, int largeSampleDayCount, int diffEMASampleDayCount)
         {
             List<double> macdData = new List<double>();
-            // jj code goes here
-            return macdData;
+            List<double> largeSampleEma = new List<double>();
+            List<double> smallSampleEma = new List<double>();
+            List<double> diffSampleEma = new List<double>();
+            List<double> difference = new List<double>();
+            double diff = 0;
+            double histogram = 0;
+            
+            smallSampleEma = ExponentialMovingAverage(data, numberOfReturnedDays, smallSampleDayCount);
+            largeSampleEma = ExponentialMovingAverage(data, numberOfReturnedDays, largeSampleDayCount);
+
+            for (int i = 1; i < numberOfReturnedDays; i++)
+            {
+                diff = smallSampleEma[i] - largeSampleEma[i];
+                difference.Add(diff);
+            }
+
+            diffSampleEma = ExponentialMovingAverage(data, numberOfReturnedDays, diffEMASampleDayCount);
+
+            for (int i = 1; i < numberOfReturnedDays; i++ )
+            {
+                histogram = difference[i] - diffSampleEma[i];
+                macdData.Add(histogram);
+            }
+                return macdData;
         }
 
         public static List<Tuple<double, double>> DMI(List<HistoricalStockData> data, int numberOfReturnedDays)
