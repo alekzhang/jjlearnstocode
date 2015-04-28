@@ -54,7 +54,7 @@ namespace jjlearnstocode
             }
         }
 
-        public static double Averagelist(List<double> anylist)
+        public static double AverageList(List<double> anylist)
         {
             double avgup = 0;
             for(int i= 0; i < anylist.Count; i++)
@@ -70,12 +70,11 @@ namespace jjlearnstocode
             List<double> smaData = new List<double>();
             double sma = 0;
 
-            for (int i = 1; i < numberOfReturnedDays; i++ )
+            for (int i = 1; i <= numberOfReturnedDays; i++ )
             {
                 for (int j = i; j < i + numberOfSampleDays; j++)
                 {
                     sma += data[j].Close;
-
                 }
                 sma = sma / numberOfSampleDays;
                 smaData.Add(sma);
@@ -104,7 +103,7 @@ namespace jjlearnstocode
             DayIEma = (data[numberOfSampleDays].Close * alpha) + (DayISma * (1 - alpha));
            
             // calc ema for each day using the ema of the day before
-            for (int i = 1; i < numberOfReturnedDays; i++)
+            for (int i = 1; i <= numberOfReturnedDays; i++)
             {
                 for (int j = i; j < i + numberOfSampleDays; j++)
                 {
@@ -128,7 +127,7 @@ namespace jjlearnstocode
             double histogram = 0;
             
 
-            for (int i = 1; i < numberOfReturnedDays; i++)
+            for (int i = 1; i <= numberOfReturnedDays; i++)
             {
                 diff = smallSampleEma[i] - largeSampleEma[i];
                 difference.Add(diff);
@@ -136,7 +135,7 @@ namespace jjlearnstocode
 
             diffSampleEma = ExponentialMovingAverage(data, numberOfReturnedDays, diffEMASampleDayCount);
 
-            for (int i = 1; i < numberOfReturnedDays; i++ )
+            for (int i = 1; i <= numberOfReturnedDays; i++ )
             {
                 histogram = difference[i] - diffSampleEma[i];
                 macdData.Add(histogram);
@@ -144,26 +143,49 @@ namespace jjlearnstocode
                 return macdData;
         }
 
-        public static List<Tuple<double, double>> DMI(List<HistoricalStockData> data, int numberOfReturnedDays)
+        public static List<double> DMI(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
         {
-            List<Tuple<double, double>> dmiData = new List<Tuple<double, double>>();
-            for(int i = 0; i < numberOfReturnedDays; i++)
+            List<double> dX = new List<double>();
+            List<double> dMPlus = new List<double>();
+            List<double> dMMinus = new List<double>();
+            List<double> trueRange = new List<double>();
+
+            for(int i = 1; i <= numberOfSampleDays; i++)
             {
-                double plusDI = 0.0;
-                double minusDI = 0.0;
+                for (int j = i; j < i + numberOfReturnedDays; j++)
+                {
+                    if (Math.Abs(data[j].High - data[j - 1].High) > Math.Abs(data[j].Low - data[j - 1].Low))
+                        dMPlus.Add(Math.Abs(data[j].High - data[j - 1].High));
+                    else
+                        dMMinus.Add(Math.Abs(data[j].Low - data[j - 1].Low));
 
-                // jj code goes here
+                    double dailyTR = Math.Max(data[i].High - data[i].Low, Math.Max(data[i].High - data[i - 1].Close, data[i].Low - data[i - 1].Close));
+                    trueRange.Add(dailyTR);
+                }
 
-                dmiData.Add(new Tuple<double, double>(plusDI, minusDI));
+                double plusAvg = AverageList(dMPlus);
+                double minusAvg = AverageList(dMMinus);
+                double trAvg = AverageList(trueRange);
+
+                double dIPlus = (plusAvg / trAvg) * 100;
+                double dIMinus = (plusAvg / trAvg) * 100;
+
+                dMPlus.Clear();
+                dMMinus.Clear();
+                trueRange.Clear();
+
+                double currentDX = (dIPlus - dIMinus) / (dIPlus + dIMinus) * 100;
+                dX.Add(currentDX);
             }
-            return dmiData;
+    
+            return dX;
         }
+        
 
         public static List<double> RSI(List<HistoricalStockData> data, int numberOfReturnedDays, int numberOfSampleDays)
         {
             List<double> rsiData = new List<double>();
             double RSI = 0.0;
-            double deltaa = 0.0;
             
             List<double> deltaups = new List<double>();
             List<double> deltadowns = new List<double>();
@@ -174,7 +196,7 @@ namespace jjlearnstocode
                 {
                     if (data[j].Close >= data[j - 1].Close)
                     {
-                        deltaa = data[j].Close - data[j - 1].Close;
+                        double deltaa = data[j].Close - data[j - 1].Close;
                         deltaups.Add(deltaa);
                     }
                     else
@@ -183,7 +205,7 @@ namespace jjlearnstocode
                         deltadowns.Add(deltaa);
                     }
                 }
-                RSI = 100.0 - (100.0 / (1.0 + (Averagelist(deltaups) / Averagelist(deltadowns))));
+                RSI = 100.0 - (100.0 / (1.0 + (AverageList(deltaups) / AverageList(deltadowns))));
                 Console.WriteLine(RSI);
                 deltaups.Clear();
                 deltadowns.Clear();
@@ -192,3 +214,4 @@ namespace jjlearnstocode
         }
     }
 }
+
